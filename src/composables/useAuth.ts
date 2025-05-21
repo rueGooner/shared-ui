@@ -1,7 +1,7 @@
 import { ref, type Ref } from "vue";
 import axios, { AxiosError } from "axios";
 
-const API_URL = "http:/localhost:3000/auth";
+const API_URL = "http://localhost:5050/auth";
 
 interface UserCredentials {
   email: string;
@@ -28,7 +28,7 @@ export const useAuth = (): UseAuthComposable => {
   const error = ref<string | null>(null);
 
   const handleLogin = async (
-    userCredentials: UserCredentials
+    userCredentials: UserCredentials,
   ): Promise<void> => {
     isLoading.value = true;
     error.value = null;
@@ -36,8 +36,10 @@ export const useAuth = (): UseAuthComposable => {
     try {
       const response = await axios.post<AuthenticationResponse>(
         `${API_URL}/login`,
-        userCredentials
+        userCredentials,
       );
+
+      console.log("RESPONSE", response.data);
       const token = response.data.access_token;
 
       localStorage.setItem("access-token", token);
@@ -51,7 +53,7 @@ export const useAuth = (): UseAuthComposable => {
   };
 
   const handleRegistration = async (
-    userCredentials: UserCredentials
+    userCredentials: UserCredentials,
   ): Promise<void> => {
     isLoading.value = true;
     error.value = null;
@@ -59,7 +61,7 @@ export const useAuth = (): UseAuthComposable => {
     try {
       const response = await axios.post<AuthenticationResponse>(
         `${API_URL}/register`,
-        userCredentials
+        userCredentials,
       );
       const token = response.data.access_token;
 
