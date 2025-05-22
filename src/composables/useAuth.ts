@@ -13,19 +13,19 @@ interface AuthenticationResponse {
 }
 
 interface AuthenticationErrorResponse {
-  message: string;
+  message: string[];
 }
 
 interface UseAuthComposable {
   isLoading: Ref<boolean>;
-  error: Ref<string | null>;
+  error: Ref<string[] | null>;
   handleLogin: (userCredentials: UserCredentials) => Promise<void>;
   handleRegistration: (userCredentials: UserCredentials) => Promise<void>;
 }
 
 export const useAuth = (): UseAuthComposable => {
   const isLoading = ref<boolean>(false);
-  const error = ref<string | null>(null);
+  const error = ref<string[] | null>(null);
 
   const handleLogin = async (
     userCredentials: UserCredentials,
@@ -45,8 +45,10 @@ export const useAuth = (): UseAuthComposable => {
       localStorage.setItem("access-token", token);
     } catch (err) {
       const errorResponse = err as AxiosError<AuthenticationErrorResponse>;
-      error.value =
-        errorResponse?.response?.data?.message || "Login Attempt Failed";
+      console.log("ERROR", errorResponse?.response?.data);
+      error.value = errorResponse?.response?.data?.message || [
+        "Login Attempt Failed",
+      ];
     } finally {
       isLoading.value = false;
     }
@@ -68,8 +70,9 @@ export const useAuth = (): UseAuthComposable => {
       localStorage.setItem("access-token", token);
     } catch (err) {
       const errorResponse = err as AxiosError<AuthenticationErrorResponse>;
-      error.value =
-        errorResponse?.response?.data?.message || "Registration Attempt Failed";
+      error.value = errorResponse?.response?.data?.message || [
+        "Registration Attempt Failed",
+      ];
     } finally {
       isLoading.value = false;
     }
