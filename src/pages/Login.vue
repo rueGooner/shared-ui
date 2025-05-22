@@ -28,6 +28,13 @@
       <span v-if="isLoading">Logging in...</span>
       <span v-else>Login</span>
     </Button>
+
+    <Notification
+      v-if="error"
+      :messages="error"
+      :duration="3000"
+      :notificationType="'error'"
+    />
   </form>
 </template>
 
@@ -35,9 +42,10 @@
 import { ref } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import InputWithLabel from "@/components/form/InputWithLabel.vue";
+import Notification from "@/components/Notification.vue";
 import Button from "@/components/ui/button/Button.vue";
 
-const { handleLogin, isLoading } = useAuth();
+const { handleLogin, isLoading, error } = useAuth();
 const email = ref("");
 const password = ref("");
 
